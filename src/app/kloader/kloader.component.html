@@ -1,0 +1,20 @@
+<div class="card mb-3">
+	<div class="card-body">
+		<div class="progress mb-4" [hidden]="layout.progress == 100" style="height: 3px;">
+			<div class="progress-bar bg-success" role="progressbar" [style.width.%]="layout.progress" aria-valuemin="0"	aria-valuemax="100"></div>
+		</div>
+		<div class="row d-flex justify-content-center">
+			<div *ngFor="let p of partners | keyvalue" class="col col-xs-2 col-sm-2 col-md text-center">
+				<img alt="{{ p.value.nazev }}" style="margin-bottom: -0.7rem" class="img-fluid"
+					src="{{ LOGA[p.value.nazev] }}">
+				<span *ngIf="p.value.kalk === 0" class="fa fa-spinner fa-spin" role="status"
+					aria-hidden="true"></span>
+				<span *ngIf="p.value.kalk === 0" class="sr-only">Kalkuluji...</span>
+				<span *ngIf="p.value.kalk === 1" class="fa fa-check text-success" role="status"
+					aria-hidden="true"></span>
+				<span *ngIf="p.value.kalk === -1" class="fa fa-exclamation-triangle text-danger" role="status"
+					aria-hidden="true"></span>
+			</div>
+		</div>
+	</div>
+</div>

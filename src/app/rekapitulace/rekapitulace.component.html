@@ -1,0 +1,101 @@
+<fieldset #rekap id="rekap" ngModelGroup="rekap">
+
+<div class="row">
+  <!-- první sloupec -->
+  <div class="{{ layout.grid.column1 }}">
+    <div class="row">
+      <!--<div class="col-12">
+        <h5 class="vagl text-primary">{{ 'REKAPITULACE.OSOBNIUDAJE' | translate }}</h5>
+      </div> -->
+      <div class="col-12 col-sm-3">
+        <h6 class="">{{ 'OSOBA.POJISTNIK.LABEL' | translate }}</h6>
+      </div>
+      <div class="col-12 col-sm-9 row">
+        <div *ngIf="data.pojistnik.typ < 3" class="col-12">{{ data.pojistnik.jmeno }} {{ data.pojistnik.prijmeni }}, {{ 'REKAPITULACE.RC' | translate }} {{ data.pojistnik.rc }}</div>
+        <div *ngIf="data.pojistnik.typ == 3" class="col-12">{{ data.pojistnik.jmeno }} {{ data.pojistnik.prijmeni }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.pojistnik.ic }}</div>
+        <div *ngIf="data.pojistnik.typ == 4" class="col-12">{{ data.pojistnik.spolecnost }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.pojistnik.ic }}</div>
+        <div class="col-12">{{ data.pojistnik.adresa.ulice }} {{ data.pojistnik.adresa.cp }}, {{ data.pojistnik.adresa.psc }} {{ data.pojistnik.adresa.obec }}</div>
+        <div class="col-12"><strong><i class="fas fa-envelope"></i> {{ data.pojistnik.email }}</strong></div>
+        <div class="col-12">
+          <i class="fas fa-phone"></i> {{ data.pojistnik.telefon | telefonFormat}}</div>
+      </div>
+      <div class="col-12 col-sm-3">
+        <h6 class="">{{ 'OSOBA.VLASTNIK.LABEL' | translate }}</h6>
+      </div>
+      <div *ngIf="data.pojistnikvlastnik" class="col-12 col-sm-9 row">
+        <div class="col-12">{{ 'REKAPITULACE.POJISTNIKVLASTNIK' | translate }}</div>
+      </div>      
+      <div *ngIf="!data.pojistnikvlastnik" class="col-12 col-sm-9 row">
+        <div *ngIf="data.vlastnik.typ < 3" class="col-12">{{ data.vlastnik.jmeno }} {{ data.vlastnik.prijmeni }}, {{ 'REKAPITULACE.RC' | translate }} {{ data.vlastnik.rc }}</div>
+        <div *ngIf="data.vlastnik.typ == 3" class="col-12">{{ data.vlastnik.jmeno }} {{ data.vlastnik.prijmeni }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.vlastnik.ic }}</div>
+        <div *ngIf="data.vlastnik.typ == 4" class="col-12">{{ data.vlastnik.spolecnost }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.vlastnik.ic }}</div>
+        <div class="col-12">{{ data.vlastnik.adresa.ulice }} {{ data.vlastnik.adresa.cp }}, {{ data.vlastnik.adresa.psc }} {{ data.vlastnik.adresa.obec }}</div>
+      </div>
+      <div class="col-12 col-sm-3">
+        <h6 class="">{{ 'OSOBA.PROVOZOVATEL.LABEL' | translate }}</h6>
+      </div>
+      <div *ngIf="data.pojistnikprovozovatel" class="col-12 col-sm-9 row">
+        <div class="col-12">{{ 'REKAPITULACE.POJISTNIKPROVOZOVATEL' | translate }}</div>
+      </div>      
+      <div *ngIf="!data.pojistnikprovozovatel && data.vlastnikprovozovatel" class="col-12 col-sm-9 row">
+        <div class="col-12">{{ 'REKAPITULACE.VLASTNIKPROVOZOVATEL' | translate }}</div>
+      </div>  
+      <div *ngIf="!data.pojistnikprovozovatel && !data.vlastnikprovozovatel" class="col-12 col-sm-9 row">
+        <div *ngIf="data.provozovatel.typ < 3" class="col-12">{{ data.provozovatel.jmeno }} {{ data.provozovatel.prijmeni }}, {{ 'REKAPITULACE.RC' | translate }} {{ data.provozovatel.rc }}</div>
+        <div *ngIf="data.provozovatel.typ == 3" class="col-12">{{ data.provozovatel.jmeno }} {{ data.provozovatel.prijmeni }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.provozovatel.ic }}</div>
+        <div *ngIf="data.provozovatel.typ == 4" class="col-12">{{ data.provozovatel.spolecnost }}, {{ 'REKAPITULACE.IC' | translate }} {{ data.provozovatel.ic }}</div>
+        <div class="col-12">{{ data.provozovatel.adresa.ulice }} {{ data.provozovatel.adresa.cp }}, {{ data.provozovatel.adresa.psc }} {{ data.provozovatel.adresa.obec }}</div>
+      </div>           
+      <div class="col-12 col-sm-3">
+        <h6 class="">{{ 'REKAPITULACE.VOZIDLO' | translate }}</h6>
+      </div>
+      <div class="col-12 col-sm-9 row">
+        <div class="col-12"><strong>{{ texty.znacka }} {{ texty.model }}</strong>, {{ 'REKAPITULACE.VIN' | translate }} {{ data.vozidlo.vin }}</div>
+        <div *ngIf="data.vozidlo.rz" class="col-12">
+          {{ 'REKAPITULACE.RZ' | translate }} {{ data.vozidlo.rz }},
+          {{ 'REKAPITULACE.VTP' | translate }} {{ data.vozidlo.vtp }}
+        </div>
+        <div class="col-12">
+          {{ data.vozidlo.objem_motoru }} {{ 'FORM.CCM' | translate }},
+          {{ data.vozidlo.vykon_motoru }} {{ 'FORM.KW' | translate }},
+          {{ data.vozidlo.hmotnost }} {{ 'FORM.KG' | translate }}<br />
+          {{ 'REKAPITULACE.UVEDENIDP' | translate }} {{ data.vozidlo.uvedenidp | date:'d.M.yyyy' }},
+          {{ 'REKAPITULACE.NAJEZD' | translate }} {{ texty.najezd }}
+        </div>
+        <div *ngIf="data.vozidlo.uziti != 1" class="col-12">
+          <strong>{{ texty.uziti }}</strong>
+        </div>        
+      </div>
+      <div class="col-12 col-sm-3">
+        <h6 class="">{{ 'POJISTKA.POCATEK.LABEL' | translate }}</h6>
+      </div>
+      <div class="col-12 col-sm-9 row">
+        <div class="col-12">{{ data.pocatek | date:'d.M.yyyy' }}</div>
+      </div>                
+    </div>
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.PROHLASENI.TITLE' | translate }}</h4>
+    <div class="prohlaseni text-smaller" [innerHTML]="'REKAPITULACE.PROHLASENI.TEXT' | translate"></div>
+
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.SOUHLAS.TITLE' | translate }}</h4>
+    <div class="custom-control custom-checkbox">
+        <input class="custom-control-input" [(ngModel)]="data.souhlas" id="souhlas" name="souhlas"  value="1" type="checkbox" required />
+        <label class="text-smaller custom-control-label" for="souhlas">
+        {{ 'REKAPITULACE.SOUHLAS.TEXT' | translate }}
+        </label>
+    </div>
+
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.OSTATNI.TITLE' | translate }}</h4>
+    <div class="form-group">
+        <label for="poznamka">{{ 'REKAPITULACE.OSTATNI.TEXT' | translate }}</label>
+        <textarea [(ngModel)]="data.poznamka" class="form-control" name="poznamka" id="poznamka" rows="2"></textarea>
+    </div>    
+  </div>
+  <!-- druhý sloupec -->
+  <div class="{{ layout.grid.column2 }}">
+    <h4 *ngIf="r" class="vagl text-primary">{{ 'REKAPITULACE.PRODUKT' | translate }}</h4>
+    <app-produktinfo *ngIf="r" [(data)]="data" [r]="r" [show_doc]="true" [layout]="layout"></app-produktinfo>
+    <div class="hidden-md-up mb-4"></div>
+  </div>
+</div>
+
+</fieldset>

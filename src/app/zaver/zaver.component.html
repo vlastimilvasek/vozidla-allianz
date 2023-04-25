@@ -1,0 +1,81 @@
+<div class="row partner pt-3 pb-5 align-items-center">
+  <div class="col-auto">
+    <i style="float: left;" class="fa-4x fa-fw fas text-success fa-check"></i>
+  </div>
+  <div class="col">
+    <h3 class="vagl card-title">{{ 'ZAVER.PODEKOVANI.TITLE' | translate }}</h3>
+    <p class="card-text" [innerHTML]="'ZAVER.PODEKOVANI.TEXT' | translate"></p>
+  </div>
+</div>
+
+<div *ngIf="loading">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="progress mb-4" style="height: 3px;">
+        <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progress" aria-valuemin="0"
+          aria-valuemax="100"></div>
+      </div>
+      <div class="mt-2 d-flex justify-content-center">
+        <p [innerHTML]="'ZAVER.NACITANI' | translate"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading">
+
+  <!--  WS partnera vrátila dokumenty  -->
+  <div *ngIf="sjednani.status == 1">
+    <div class="mx-auto mb-3">
+      <div class="py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.OK.DOKUMENTY.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.OK.DOKUMENTY.TEXT' | translate:{email: data.pojistnik.email}"></p>
+          <ul *ngIf="sjednani.docs.length" class="fa-ul">
+            <li *ngFor="let doc of sjednani.docs">
+                <a class="" href="{{ doc.docURL }}" target="_pdf_dok"><span class="fa-li" ><i class="text-danger far fa-file-pdf"></i></span> {{ doc.docTyp }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-light py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.OK.UZAVRENI.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.OK.UZAVRENI.TEXT' | translate"></p>
+          <p [innerHTML]="'ZAVER.PLATBA.' + pojistovna | translate:{vs: sjednani.vs, termin: sjednani.termin_platby}"></p>
+        </div>
+      </div>
+      <div class="py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.OK.SERVIS.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.OK.SERVIS.TEXT' | translate"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--   nějaká chybka - WS partnera nevrátila dokumenty  -->
+  <div *ngIf="sjednani.status != 1">
+    <div class="mx-auto mb-3">
+      <div class="py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.POKONTROLE.DOKUMENTY.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.POKONTROLE.DOKUMENTY.TEXT' | translate:{email: data.pojistnik.email}"></p>
+        </div>
+      </div>
+      <div class="bg-light py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.POKONTROLE.UZAVRENI.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.POKONTROLE.UZAVRENI.TEXT' | translate"></p>
+        </div>
+      </div>
+      <div class="py-3 align-items-center">
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.POKONTROLE.SERVIS.TITLE' | translate }}</h5>
+          <p [innerHTML]="'ZAVER.POKONTROLE.SERVIS.TEXT' | translate"></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

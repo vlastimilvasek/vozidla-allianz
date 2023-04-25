@@ -1,0 +1,393 @@
+<!-- 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container">
+  <a class="navbar-brand" href="#">Angular 2+ kalkulačky a sjednání</a>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Odpovědnost <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
+  
+  	<div class="btn-group float-right" data-toggle="buttons">
+		<button class="btn btn-outline-secondary" #langSelect1 *ngFor="let lang of translate.getLangs()"
+			(click)="translate.use(langSelect1.value)" [value]="lang"
+			[class.active]="lang === translate.currentLang">{{ lang }}
+		</button>
+	</div>
+  
+</div>  
+</nav>
+ -->
+
+	<div id="layoutHelper" [ngStyle]="{'display': layout.helper}" >
+		<div class="visible-xl text-center alert alert-success" role="alert">Rozlišení XL</div>
+		<div class="visible-lg text-center alert alert-info" role="alert">Rozlišení LG</div>
+		<div class="visible-md text-center alert alert-warning" role="alert">Rozlišení MD</div>
+		<div class="visible-sm text-center alert alert-primary" role="alert">Rozlišení SM</div>
+		<div class="visible-xs text-center alert alert-danger" role="alert">Rozlišení XS</div>
+	</div>
+
+  <tabset #stepTabs type="pills" [justified]="true">
+    <tab>
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.ZADANI' | translate }}</span>
+			<span class="nav-number">1</span>
+		</ng-template>
+    	<form #f="ngForm" (ngSubmit)="submitZadani(f);" novalidate [class.submitted]="f.submitted">
+			<app-zadani [(data)]="data" [layout]="layout" [parentForm]="f" required></app-zadani>
+			<div class="row align-items-center" *ngIf="data.pojisteni">
+				<div class="col-md-2"></div>  			
+				<div class="col-md-8 text-center">
+					<button type="submit" (click)="f.submitted = true;" class="btn btn-success btn-lg mt-4">
+						{{ 'FORM.BUTTONS.SROVNAT' | translate }} 
+						<i class="fa fa-chevron-right" *ngIf="layout.kalkulaceAktivni === false"></i>
+						<i class="fa fa-spinner fa-spin" *ngIf="layout.kalkulaceAktivni === true"></i>
+					</button>
+				</div>
+				<div class="col-md-2">
+					<button type="button" class="mt-4 btn btn-sm btn-light float-right"
+						placement="top"
+						triggers="mouseenter:mouseleave"		
+						popover="{{ 'FORM.BUTTONS.NOVATIP' | translate }}"
+						(click)="initData(); f.submitted = false;" >	
+						{{ 'FORM.BUTTONS.NOVA' | translate }}
+					</button>
+				</div>
+			</div>
+    	</form>
+    </tab>
+    <tab [disabled]="!f.valid" (selectTab)="tabSrovnani();">
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.SROVNANI' | translate }}</span>
+			<span class="nav-number">2</span>
+			<!--  <i class="fa fa-spinner fa-spin" *ngIf="layout.kalkulaceAktivni === true"></i> -->
+		</ng-template>
+
+		<div class="row mb-4">
+			<div class="col order-2 order-md-1">
+				<button type="button" class="btn btn-outline-secondary btn-sm float-left" (click)="staticTabs.tabs[0].active = true">
+					<i class="fa fa-chevron-left"></i> {{ 'SROVNANI.BACK' | translate }}
+				</button>				
+			</div>
+			<div class="col-xs-12 col-md-auto order-1 order-md-2 text-center">
+				<h3 class="text-center">
+					<span class="">{{ 'FORM.TABS.SROVNANI' | translate }}</span>
+					<span *ngIf="data.pojisteni == 'POV';" class="hidden-md-down text-muted"> : {{ 'SROVNANI.POV' | translate }}</span>
+					<span *ngIf="data.pojisteni == 'HAV';" class="hidden-md-down text-muted"> : {{ 'SROVNANI.HAV' | translate }}</span>
+				</h3>
+			</div>
+			<div class="col order-3 order-md-3 text-right">
+				<button type="button" class="btn btn-outline-secondary btn-sm float-right"
+					popover="{{ 'SROVNANI.FILTRY.HINT' | translate }}"
+					placement="right" triggers="" #filtrHint="bs-popover" id="filtrHint"
+					(click)="layout.filtrCollapsed = !layout.filtrCollapsed" [attr.aria-expanded]="!layout.filtrCollapsed" aria-controls="collapseFiltr">
+					<span>
+						<i class="fas fa-ellipsis-v"></i> {{ 'FORM.BUTTONS.FILTRY' | translate }}
+					</span>
+				</button>		
+				<div class="btn-group float-right mr-2" dropdown>
+					<button id="button-tools" dropdownToggle class="btn btn-outline-secondary btn-sm dropdown-toggle" aria-controls="dropdown-basic">
+						<i class="fas fa-cog"></i> <span class="caret"></span>
+					</button>
+					<ul id="dropdown-basic" *dropdownMenu class="dropdown-menu-right dropdown-menu" role="menu" aria-labelledby="button-basic">
+						<li role="menuitem"><a class="dropdown-item" (click)="shareModal.show()"><i class="fas fa-share-alt"></i> {{ 'FORM.BUTTONS.SDILENI' | translate }}</a></li>
+						<li role="menuitem"><a class="dropdown-item" (click)="emailModal.show()"><i class="fas fa-at"></i> {{ 'FORM.BUTTONS.EMAIL' | translate }}</a></li>
+						<div class="dropdown-divider"></div>
+						<li role="menuitem"><a class="dropdown-item" (click)="openPDF()"><i class="far fa-file-pdf"></i> {{ 'FORM.BUTTONS.OFFERS_PDF' | translate }}</a></li>
+					</ul>
+				</div>				
+			</div>
+		</div>		
+
+		<div id="collapseFiltr" [collapse]="layout.filtrCollapsed" class="mb-4 card">
+			<div class="card-body">
+				<div class="row">			
+					<h5 class="col card-title vagl" [innerHtml]="'FILTRY.TITLE' | translate"></h5>
+					<div class="col">
+						<button type="button" class="btn btn-sm btn-secondary float-right" (click)="layout.filtrCollapsed = !layout.filtrCollapsed">
+							{{ 'FORM.BUTTONS.CLOSE' | translate }} <i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+				<form #filtry="ngForm">
+				<app-filtry [(data)]="data" [offers]="offers" [(filters)]="filters" ></app-filtry>
+				</form>
+			</div>
+		</div>
+		  
+		<app-srovnani #s (vyberProdukt)="vyberProdukt($event)" [layout]="layout" [data]="data" [(offers)]="offers"></app-srovnani>
+		<app-kloader [partners]="partners" [layout]="layout"></app-kloader>
+    </tab>
+    <tab>
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.UDAJE' | translate }}</span>
+			<span class="nav-number">3</span>
+		</ng-template>      
+		<h3>
+			{{ 'FORM.TABS.UDAJE' | translate }}	
+		</h3>
+		<div *ngIf="!data.produkt && !layout.kalkulaceAktivni" class="text-center alert alert-warning py-4" role="alert">
+			{{ 'POJISTKA.NENIPRODUKT' | translate }}&nbsp;&nbsp;
+			<button type="button" class="btn btn-outline-secondary btn-sm"
+				(click)="offers.length ? (staticTabs.tabs[1].active = true) : (staticTabs.tabs[0].active = true)"
+				[ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
+				<i class="fa fa-chevron-left"></i> {{ 'FORM.BUTTONS.ZPET' | translate }}
+			</button>			
+		</div>
+		<form #u="ngForm" (ngSubmit)="submitUdaje(u)" novalidate [class.submitted]="u.submitted">
+		<div *ngIf="data.produkt">
+			<app-udaje [(data)]="data" [(r)]="vprodukt" [layout]="layout" [submitted]="u.submitted" required></app-udaje>
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
+					{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
+				</button>
+			</div>
+		</div>
+		</form>		
+    </tab>        
+    <tab>
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.OBJEKT' | translate }}</span>
+			<span class="nav-number">4</span>
+		</ng-template>      
+		<h3>
+			{{ 'FORM.TABS.OBJEKT' | translate }}			
+		</h3>
+		<form #ob="ngForm" (ngSubmit)="submitObjekt(ob)" novalidate [class.submitted]="ob.submitted">
+			<app-objekt [(data)]="data" [layout]="layout" [submitted]="ob.submitted" required></app-objekt>
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
+					{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
+				</button>
+			</div>
+		</form>		
+    </tab>  
+    <tab>
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.OSOBNI' | translate }}</span>
+			<span class="nav-number">5</span>
+		</ng-template>          
+    	<h3>
+			{{ 'FORM.TABS.OSOBNI' | translate }}		
+		</h3> 
+    	<form #o="ngForm" (ngSubmit)="submitOsobni(o)" novalidate [class.submitted]="o.submitted">
+			<h4 class="vagl text-primary">{{ 'OSOBA.POJISTNIK.LABEL' | translate }}</h4>
+			<app-osoba [(data)]="data.pojistnik" [role]="'pojistnik'" [layout]="layout" [submitted]="o.submitted" required></app-osoba>
+			
+			<h4 class="vagl text-primary">{{ 'OSOBA.VLASTNIK.LABEL' | translate }}</h4>
+			<div class="row">
+				<div class="{{ layout.grid.column }}">
+					<ng-template #hintPojistnikVlastnik><div class="text-left" [innerHtml]="'OSOBA.POJISTNIKVLASTNIK.HINT' | translate"></div></ng-template>
+					<div class="form-group row">
+						<label class="{{ layout.grid.label2 }} col-form-label"
+							placement="right auto"
+							triggers="mouseenter:mouseleave"		
+							[tooltip]="('OSOBA.POJISTNIKVLASTNIK.HINT' | translate) === '' ? '' : hintPojistnikVlastnik">
+							{{ 'OSOBA.POJISTNIKVLASTNIK.LABEL' | translate }}
+							<i *ngIf="('OSOBA.POJISTNIKVLASTNIK.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+						</label>
+						<div class="{{ layout.grid.input2 }} pt-1">   		
+							<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-outline-primary" [class.active]="data.pojistnikvlastnik === true">
+									<input name="pojistnikvlastnik" [(ngModel)]="data.pojistnikvlastnik" [value]="true" type="radio" required />
+									{{ 'FORM.ANO' | translate }}
+								</label>
+								<label class="btn btn-outline-primary" [class.active]="data.pojistnikvlastnik === false">
+									<input name="pojistnikvlastnik" [(ngModel)]="data.pojistnikvlastnik" [value]="false" type="radio" />
+									{{ 'FORM.NE' | translate }}
+								</label>
+							</div>
+						</div>   		
+					</div>
+				</div>
+			</div>
+			<app-osoba *ngIf="data.pojistnikvlastnik !== true" [(data)]="data.vlastnik" [role]="'vlastnik'" [layout]="layout" [submitted]="o.submitted" required></app-osoba>			
+
+			<h4 class="vagl text-primary">{{ 'OSOBA.PROVOZOVATEL.LABEL' | translate }}</h4>
+			<div class="row">
+				<div class="{{ layout.grid.column }}">
+					<div class="form-group row">
+						<label class="{{ layout.grid.label2 }} col-form-label"
+							placement="right"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'OSOBA.VLASTNIKPROVOZOVATEL.HINT' | translate }}">
+							{{ 'OSOBA.VLASTNIKPROVOZOVATEL.LABEL' | translate }}
+						</label>
+						<div class="{{ layout.grid.input2 }} pt-1">   		
+							<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-outline-primary" [class.active]="data.vlastnikprovozovatel === true">
+									<input name="pojistnikprovozovatel" [(ngModel)]="data.vlastnikprovozovatel" [value]="true" type="radio" required />
+									{{ 'FORM.ANO' | translate }}
+								</label>
+								<label class="btn btn-outline-primary" [class.active]="data.vlastnikprovozovatel === false">
+									<input name="vlastnikprovozovatel" [(ngModel)]="data.vlastnikprovozovatel" [value]="false" type="radio" />
+									{{ 'FORM.NE' | translate }}
+								</label>
+							</div>
+						</div>   		
+					</div>
+				</div>				
+				<div *ngIf="data.vlastnikprovozovatel !== true" class="{{ layout.grid.column }}">
+					<div class="form-group row">
+						<label class="{{ layout.grid.label2 }} col-form-label"
+							placement="right"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'OSOBA.POJISTNIKPROVOZOVATEL.HINT' | translate }}">
+							{{ 'OSOBA.POJISTNIKPROVOZOVATEL.LABEL' | translate }}
+						</label>
+						<div class="{{ layout.grid.input2 }} pt-1">   		
+							<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-outline-primary" [class.active]="data.pojistnikprovozovatel === true">
+									<input name="pojistnikprovozovatel" [(ngModel)]="data.pojistnikprovozovatel" [value]="true" type="radio" required />
+									{{ 'FORM.ANO' | translate }}
+								</label>
+								<label class="btn btn-outline-primary" [class.active]="data.pojistnikprovozovatel === false">
+									<input name="pojistnikprovozovatel" [(ngModel)]="data.pojistnikprovozovatel" [value]="false" type="radio" />
+									{{ 'FORM.NE' | translate }}
+								</label>
+							</div>
+						</div>   		
+					</div>
+				</div>				
+			</div>
+			
+			<app-osoba *ngIf="data.pojistnikprovozovatel === false && data.vlastnikprovozovatel === false" [(data)]="data.provozovatel" [role]="'provozovatel'" [layout]="layout" [submitted]="o.submitted" required></app-osoba>			
+
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
+					{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
+				</button>
+			</div>
+    	</form>
+    </tab>
+    <tab [disabled]="!u.valid || !ob.valid || !o.valid || !data.produkt">
+    	<ng-template tabHeading>
+			<span class="nav-desc">{{ 'FORM.TABS.REKAPITULACE' | translate }}</span>
+			<span class="nav-number">6</span>
+		</ng-template>          
+    	<h3>{{ 'FORM.TABS.REKAPITULACE' | translate }}</h3> 
+    	<form #r="ngForm" (ngSubmit)="sjednat(r)" novalidate [class.submitted]="r.submitted">
+
+			<app-rekapitulace [(data)]="data" [layout]="layout" [r]="vprodukt" required></app-rekapitulace>
+			<div *ngIf="layout.form_r.error" class="text-center alert alert-danger mt-4 p2-4" role="alert">
+				{{ 'REKAPITULACE.SJEDNAT.ERROR' | translate }}&nbsp;&nbsp;	
+			</div>                
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [disabled]="layout.form_r.loading">
+					{{ 'FORM.BUTTONS.SJEDNAT' | translate }}&nbsp;
+					<i *ngIf="!layout.form_r.loading" class="fa fa-chevron-right"></i>
+					<i *ngIf="layout.form_r.loading" class="fa fa-spinner fa-spin"></i>
+				</button>
+			</div>
+
+    	</form>
+    </tab>    
+  </tabset>  
+
+
+<!--Share modal-->
+<div bsModal #shareModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+		<h4 class="modal-title float-left">{{ 'MODAL.SDILENI.TITLE' | translate }}</h4>		
+        <button type="button" class="close float-right" (click)="shareModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<div class="input-group mb-2 mt-2">
+			<input type="text" class="form-control"
+			placeholder="{{ 'MODAL.SDILENI.PLACEHOLDER' | translate }}"
+			value="{{ URL.adresa }}" >
+		</div>
+		<div [innerHtml]="'MODAL.SDILENI.TEXT' | translate"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Email modal-->
+<div bsModal #emailModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+		<h4 class="modal-title float-left">{{ 'MODAL.EMAIL.TITLE' | translate }}</h4>		
+        <button type="button" class="close float-right" (click)="emailModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<form #kalk_email="ngForm" (ngSubmit)="KalkulaceEmail(kalk_email);" novalidate [class.submitted]="kalk_email.submitted">
+		<div class="input-group mb-2 mt-2">
+			<input type="text" class="form-control" 
+				placeholder="{{ 'MODAL.EMAIL.PLACEHOLDER' | translate }}"
+				[(ngModel)]="data.email" id="email" name="email" email required
+				[attr.disabled]="kalk_email.submitted && kalk_email.valid ? '' : null"
+				#Memail="ngModel" aria-describedby="button-addon2">
+			<div class="input-group-append">
+				<button class="btn btn-success" [attr.disabled]="kalk_email.submitted && kalk_email.valid ? '' : null" type="submit" id="button-addon2">
+					{{ 'MODAL.EMAIL.SEND' | translate }}
+				</button>
+			</div>
+		</div>
+		<small [hidden]="Memail.valid || (Memail.pristine && !kalk_email.submitted)" class="text-danger">
+			{{ 'FORM.VALIDATION.EMAIL' | translate }}
+		</small>
+		<i class="fa fa-spinner fa-spin" *ngIf="layout.kalkulaceAktivni === true"></i>
+		<div *ngIf="layout.kalkulaceMailOdeslan" class="alert alert-success" role="alert">
+			{{ 'MODAL.EMAIL.SENT' | translate }}
+		</div>
+		</form>
+		<div [innerHtml]="'MODAL.EMAIL.TEXT' | translate"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Debug modal-->
+<div bsModal #debugModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Debug</h4>
+        <button type="button" class="close pull-right" (click)="debugModal.hide()" aria-label="Zavřít">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <tabset #partneriTabs type="pills">
+			<tab heading="Data">
+				<pre>{{ data | json }}</pre>
+			</tab>
+			<tab heading="Formuláře">
+				<pre>Zadání platné?: {{ f.valid | json }}</pre>
+				<pre>#f: {{ f.value | json }}</pre>
+				<pre>Pojistka - údaje platné?: {{ u.valid | json }}</pre>
+				<pre>#u: {{ u.value | json }}</pre>	
+                <pre>Osobní údaje platné?: {{ o.valid | json }}</pre>
+				<pre>#o: {{ o.value | json }}</pre>	
+                <pre>Rekapitulace platná?: {{ r.valid | json }}</pre>
+				<pre>#r: {{ r.value | json }}</pre>	
+            </tab> 			       
+         	<tab heading="Produkty - offers">
+		      	<tabset #partneriTabs type="tabs" [justified]="true">
+				    <tab *ngFor="let r of offers" heading="{{ r.kalk + ' ' + r.produkt }}">
+						<pre>{{r | json}}</pre>
+				    </tab>
+				</tabset>
+			</tab>
+			<tab heading="Vybraný produkt">
+				<pre>{{ vprodukt | json }}</pre>
+			</tab>
+			<tab heading="Filtry">
+				<pre>{{ filters | json }}</pre>
+			</tab>
+		 </tabset>
+      </div>
+    </div>
+  </div>
+</div>

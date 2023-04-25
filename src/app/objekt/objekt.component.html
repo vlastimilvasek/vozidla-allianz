@@ -1,0 +1,366 @@
+<fieldset #objekt id="objekt" ngModelGroup="objekt">
+  <div id="objekt_vozidlo"></div>
+  <div [hidden]="!data.pojisteni">
+
+    <h4 class="vagl text-center">{{ 'VOZIDLO.IDENTIFIKACE' | translate }}</h4>
+    <div class="row mb-4 pt-4">
+      <div class="col-lg-9">
+  
+        <ng-template #hintRZ><div class="text-left" [innerHtml]="'VOZIDLO.RZ.HINT' | translate"></div></ng-template>
+        <div class="form-group row">
+            <label class="{{ layout.grid.label }} col-form-label"
+                placement="right auto"
+                triggers="mouseenter:mouseleave"		
+                [tooltip]="('VOZIDLO.RZ.HINT' | translate) === '' ? '' : hintRZ">
+                {{ 'VOZIDLO.RZ.LABEL' | translate }}
+                <i *ngIf="('VOZIDLO.RZ.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+            </label>
+            <div class="{{ layout.grid.input }}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <input type="checkbox" #RZset value="1" [checked]="rzChecked" (change)="zmenaRZ($event)" />&nbsp;{{ 'VOZIDLO.RZ.ISSUED' | translate }}
+                      </div>
+                    </div>  
+                    <input name="rz" class="form-control" type="text" placeholder="{{ 'VOZIDLO.RZ.PLACEHOLDER' | translate }}"
+                        [(ngModel)]="data.vozidlo.rz" #RZ="ngModel" [disabled]="!RZset.checked" [required]="RZset.checked" />
+                </div>					
+            </div>
+            <small [hidden]="(!RZset.checked || RZ.valid || RZ.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+              {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+            </small>
+        </div>
+        <ng-template #hintVTP><div class="text-left" [innerHtml]="'VOZIDLO.VTP.HINT' | translate"></div></ng-template>
+        <div class="form-group row">
+            <label class="{{ layout.grid.label }} col-form-label"
+                placement="right auto"
+                triggers="mouseenter:mouseleave"		
+                [tooltip]="('VOZIDLO.VTP.HINT' | translate) === '' ? '' : hintVTP">
+                {{ 'VOZIDLO.VTP.LABEL' | translate }}
+                <i *ngIf="('VOZIDLO.VTP.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+            </label>
+            <div class="{{ layout.grid.input }}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <input type="checkbox" #VTPset value="1" [checked]="vtpChecked" (change)="zmenaVTP($event)" />&nbsp;{{ 'VOZIDLO.VTP.ISSUED' | translate }}
+                      </div>
+                    </div>  
+                    <input name="vtp" class="form-control" type="text" placeholder="{{ 'VOZIDLO.VTP.PLACEHOLDER' | translate }}"
+                        [(ngModel)]="data.vozidlo.vtp" #VTP="ngModel" [disabled]="!VTPset.checked" [required]="VTPset.checked" />
+                </div>					
+            </div>
+            <small [hidden]="(!VTPset.checked || VTP.valid || VTP.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+              {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+            </small>
+        </div>        
+        <ng-template #hintVIN><div class="text-left" [innerHtml]="'VOZIDLO.VIN.HINT' | translate"></div></ng-template>
+        <div class="form-group row">
+            <label class="{{ layout.grid.label }} col-form-label"
+                placement="right auto"
+                triggers="mouseenter:mouseleave"		
+                [tooltip]="('VOZIDLO.VIN.HINT' | translate) === '' ? '' : hintVIN">
+                {{ 'VOZIDLO.VIN.LABEL' | translate }}
+                <i *ngIf="('VOZIDLO.VIN.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+            </label>
+            <div class="{{ layout.grid.input }}">
+                <div class="input-group">
+                    <input name="vin" class="form-control" type="text" placeholder="{{ 'VOZIDLO.VIN.PLACEHOLDER' | translate }}"
+                        [(ngModel)]="data.vozidlo.vin" #VIN="ngModel" required />
+                </div>					
+            </div>
+            <small [hidden]="(VIN.valid || VIN.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+              {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+            </small>            
+        </div>      
+  
+      </div>
+    </div>
+
+    <h4 class="vagl text-center">{{ 'VOZIDLO.UDAJEVTP' | translate }}</h4>
+    <div class="row mb-4 pt-4">
+          <div class="{{ layout.grid.column }}">
+
+              <ng-template #hintVozidloDruh><div class="text-left" [innerHtml]="'VOZIDLO.DRUH.HINT' | translate"></div></ng-template>
+              <div class="form-group row">
+                <label class="{{ layout.grid.label }}  col-form-label"
+                            placement="right"
+                            triggers="mouseenter:mouseleave"
+                            [tooltip]="('VOZIDLO.DRUH.HINT' | translate) === '' ? '' : hintVozidloDruh">
+                            {{ 'VOZIDLO.DRUH.LABEL' | translate }}
+                            <i *ngIf="('VOZIDLO.DRUH.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                        </label>
+                <div class="{{ layout.grid.input }}">
+                  <ngx-select name="vozidlo.druh" class="" #Druh1="ngModel"
+                    placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}" [items]="lists.druh" [allowClear]="false"
+                    [(ngModel)]="data.vozidlo.druh" required>
+                  </ngx-select>
+                </div>
+                <small [hidden]="(Druh1.valid || Druh1.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                    {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                </small>
+              </div>
+          
+              <ng-template #hintZnacka><div class="text-left" [innerHtml]="'VOZIDLO.ZNACKA.HINT' | translate"></div></ng-template>
+              <div class="form-group row" *ngIf="(data.vozidlo.druh === 1 || data.vozidlo.druh === 11)">
+                  <label class="{{ layout.grid.label }}  col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.ZNACKA.HINT' | translate) === '' ? '' : hintZnacka">
+                      {{ 'VOZIDLO.ZNACKA.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.ZNACKA.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>		
+                  <div class="{{ layout.grid.input }}"> 
+                      <ngx-select
+                          name = "vozidlo.znacka" class="" #Znacka="ngModel"
+                          placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                          [items]="lists.znacka"
+                          [allowClear]="false"
+                          optGroupLabelField="label" optGroupOptionsField="children"
+                          [(ngModel)]="data.vozidlo.znacka"
+                          (ngModelChange)="modelList(true)"
+                          required>
+                      </ngx-select>			
+                  </div>
+                  <small [hidden]="Znacka.valid || (Znacka.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                  </small>		
+              </div>
+              <ng-template #hintModel><div class="text-left" [innerHtml]="'VOZIDLO.MODEL.HINT' | translate"></div></ng-template>
+              <div class="form-group row" [hidden]="!data.vozidlo.znacka" *ngIf="(data.vozidlo.druh === 1 || data.vozidlo.druh === 11)">
+                  <label class="{{ layout.grid.label }}  col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.MODEL.HINT' | translate) === '' ? '' : hintModel">
+                      {{ 'VOZIDLO.MODEL.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.MODEL.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>		
+                  <div class="{{ layout.grid.input }}"> 
+                      <ngx-select
+                          name = "vozidlo.model" class="" #Model="ngModel"
+                          placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                          noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                          [items]="lists.model"
+                          [allowClear]="false"
+                          [(ngModel)]="data.vozidlo.model" 
+                          required>
+                      </ngx-select>			
+                  </div>
+                  <small [hidden]="Model.valid || (Model.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                  </small>		
+              </div>             
+              <ng-template #hintPalivo><div class="text-left" [innerHtml]="'VOZIDLO.PALIVO.HINT' | translate"></div></ng-template>
+              <div class="form-group row" *ngIf="data.vozidlo.druh !== 3">
+                  <label class="{{ layout.grid.label }}  col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.PALIVO.HINT' | translate) === '' ? '' : hintPalivo">
+                      {{ 'VOZIDLO.PALIVO.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.PALIVO.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>		
+                  <div class="{{ layout.grid.input }}"> 
+                      <ngx-select
+                          name = "vozidlo.palivo" class="" #Palivo="ngModel"
+                          placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                          noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                          [items]="lists.palivo"
+                          [allowClear]="false"
+                          [(ngModel)]="data.vozidlo.palivo" 
+                          required>
+                      </ngx-select>			
+                  </div>
+                  <small [hidden]="Palivo.valid || (Palivo.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                  </small>		
+              </div>
+              <ng-template #hintUziti><div class="text-left" [innerHtml]="'VOZIDLO.UZITI.HINT' | translate"></div></ng-template>
+              <div class="form-group row" *ngIf="data.vozidlo.druh !== 3">
+                  <label class="{{ layout.grid.label }}  col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.UZITI.HINT' | translate) === '' ? '' : hintUziti">
+                      {{ 'VOZIDLO.UZITI.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.UZITI.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>		
+                  <div class="{{ layout.grid.input }}"> 
+                      <ngx-select
+                          name = "vozidlo.uziti" class="" #Uziti="ngModel"
+                          placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                          noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                          [items]="lists.uziti"
+                          [allowClear]="false"
+                          [(ngModel)]="data.vozidlo.uziti" 
+                          required>
+                      </ngx-select>			
+                  </div>
+                  <small [hidden]="Uziti.valid || (Uziti.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                  </small>		
+              </div>                                                  
+      
+          </div>
+          <div class="{{ layout.grid.column }}">
+
+              <ng-template #hintObjem><div class="text-left" [innerHtml]="'VOZIDLO.OBJEM.HINT' | translate"></div></ng-template>
+              <div class="form-group row" *ngIf="data.vozidlo.druh !== 3">
+                  <label class="{{ layout.grid.label }} col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.OBJEM.HINT' | translate) === '' ? '' : hintObjem">
+                      {{ 'VOZIDLO.OBJEM.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.OBJEM.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>
+                  <div class="{{ layout.grid.input }}">
+                      <div class="input-group">
+                          <input name="objem_motoru" class="form-control" type="text" placeholder="{{ 'VOZIDLO.OBJEM.PLACEHOLDER' | translate }}"
+                              [(ngModel)]="data.vozidlo.objem_motoru" #Objem_motoru="ngModel" telefonFormat TextNumberMin="1" TextNumberMax="10000" required />
+                          <div class="input-group-append">
+                              <span class="input-group-text">{{ 'FORM.CCM' | translate }}</span>
+                          </div>
+                      </div>					
+                  </div>
+                  <small [hidden]="Objem_motoru.valid || (Objem_motoru.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                      <span *ngIf="Objem_motoru.errors?.TextNumberMax" translate [translateParams]="{value: '10 000'}">FORM.VALIDATION.MAX</span>
+                      <span *ngIf="Objem_motoru.errors?.TextNumberMin" translate [translateParams]="{value: '1'}">FORM.VALIDATION.MIN</span>
+                  </small>
+              </div>
+              <ng-template #hintVykon><div class="text-left" [innerHtml]="'VOZIDLO.VYKON.HINT' | translate"></div></ng-template>
+              <div class="form-group row" *ngIf="data.vozidlo.druh !== 3">
+                  <label class="{{ layout.grid.label }} col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.VYKON.HINT' | translate) === '' ? '' : hintVykon">
+                      {{ 'VOZIDLO.VYKON.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.VYKON.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>
+                  <div class="{{ layout.grid.input }}">
+                      <div class="input-group">
+                          <input name="vykon_motoru" class="form-control" type="text" placeholder="{{ 'VOZIDLO.VYKON.PLACEHOLDER' | translate }}"
+                              [(ngModel)]="data.vozidlo.vykon_motoru" #Vykon_motoru="ngModel" telefonFormat TextNumberMin="1" TextNumberMax="1000" required />
+                          <div class="input-group-append">
+                              <span class="input-group-text">{{ 'FORM.KW' | translate }}</span>
+                          </div>
+                      </div>					
+                  </div>
+                  <small [hidden]="Vykon_motoru.valid || (Vykon_motoru.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                      <span *ngIf="Vykon_motoru.errors?.TextNumberMax" translate [translateParams]="{value: '1 000'}">FORM.VALIDATION.MAX</span>
+                      <span *ngIf="Vykon_motoru.errors?.TextNumberMin" translate [translateParams]="{value: '1'}">FORM.VALIDATION.MIN</span>
+                  </small>
+              </div>
+              <ng-template #hintHmotnost><div class="text-left" [innerHtml]="'VOZIDLO.HMOTNOST.HINT' | translate"></div></ng-template>
+              <div class="form-group row">
+                  <label class="{{ layout.grid.label }} col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.HMOTNOST.HINT' | translate) === '' ? '' : hintHmotnost">
+                      {{ 'VOZIDLO.HMOTNOST.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.HMOTNOST.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>
+                  <div class="{{ layout.grid.input }}">
+                      <div class="input-group">
+                          <input name="hmotnost" class="form-control" type="text" placeholder="{{ 'VOZIDLO.HMOTNOST.PLACEHOLDER' | translate }}"
+                              [(ngModel)]="data.vozidlo.hmotnost" #Hmotnost="ngModel" telefonFormat TextNumberMin="10" TextNumberMax="3500" required />
+                          <div class="input-group-append">
+                              <span class="input-group-text">{{ 'FORM.KG' | translate }}</span>
+                          </div>
+                      </div>					
+                  </div>
+                  <small [hidden]="Hmotnost.valid || (Hmotnost.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                      <span *ngIf="Hmotnost.errors?.TextNumberMax" translate [translateParams]="{value: '3 500'}">FORM.VALIDATION.MAX</span>
+                      <span *ngIf="Hmotnost.errors?.TextNumberMin" translate [translateParams]="{value: '10'}">FORM.VALIDATION.MIN</span>
+                  </small>
+              </div>
+              <ng-template #hintUvedenidp><div class="text-left" [innerHtml]="'VOZIDLO.UVEDENIDP.HINT' | translate"></div></ng-template>
+              <div class="form-group row">
+                  <label class="{{ layout.grid.label }} col-form-label"
+                      placement="right auto"
+                      triggers="mouseenter:mouseleave"		
+                      [tooltip]="('VOZIDLO.UVEDENIDP.HINT' | translate) === '' ? '' : hintUvedenidp">
+                      {{ 'VOZIDLO.UVEDENIDP.LABEL' | translate }}
+                      <i *ngIf="('VOZIDLO.UVEDENIDP.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                  </label>		
+                  <div class="{{ layout.grid.input }}">
+                      <div class="input-group">
+                          <input name="uvedenidp" class="form-control" type="text" placeholder="{{ 'VOZIDLO.UVEDENIDP.PLACEHOLDER' | translate }}" 
+                              bsDatepicker
+                              [bsConfig]="bsConfig"
+                              [minDate]="minDate"
+                              [maxDate]="maxDate"
+                              [(ngModel)]="data.vozidlo.uvedenidp"
+                              #Uvedenidp="ngModel" #dp="bsDatepicker" required autocomplete="off" />
+                          <div class="input-group-append" (click)="dp.show()">
+                              <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                          </div>
+                      </div>	
+                  </div>
+                  <small [hidden]="Uvedenidp.valid || (!submitted)" class="text-danger {{ layout.grid.z_offset }} {{ layout.grid.z_input }}">
+                      {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                  </small>	
+              </div>                                               
+                                      
+          </div>
+      </div>
+
+      <h4 class="vagl text-center">{{ 'VOZIDLO.UDAJESTAV' | translate }}</h4>
+      <div class="row mb-4 pt-4">
+        <div class="{{ layout.grid.column }}">
+
+          <ng-template #hintNajezd><div class="text-left" [innerHtml]="'VOZIDLO.NAJEZD.HINT' | translate"></div></ng-template>
+          <div class="form-group row" *ngIf="data.vozidlo.druh === 1 || data.vozidlo.druh === 11">
+              <label class="{{ layout.grid.label }}  col-form-label"
+                  placement="right auto"
+                  triggers="mouseenter:mouseleave"		
+                  [tooltip]="('VOZIDLO.NAJEZD.HINT' | translate) === '' ? '' : hintNajezd">
+                  {{ 'VOZIDLO.NAJEZD.LABEL' | translate }}
+                  <i *ngIf="('VOZIDLO.NAJEZD.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+              </label>		
+              <div class="{{ layout.grid.input }}"> 
+                  <ngx-select
+                      name = "vozidlo.najezd" class="" #Najezd="ngModel"
+                      placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                      noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                      [items]="lists.najezd"
+                      [allowClear]="false"
+                      [(ngModel)]="data.vozidlo.najezd" 
+                      required>
+                  </ngx-select>			
+              </div>
+              <small [hidden]="Najezd.valid || (Najezd.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                  {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+              </small>		
+          </div> 
+
+        </div>
+        <div class="{{ layout.grid.column }}">
+
+          <ng-template #hintCena><div class="text-left" [innerHtml]="'VOZIDLO.CENA.HINT' | translate"></div></ng-template>
+          <div class="form-group row">
+              <label class="{{ layout.grid.label }} col-form-label"
+                  placement="right auto"
+                  triggers="mouseenter:mouseleave"		
+                  [tooltip]="('VOZIDLO.CENA.HINT' | translate) === '' ? '' : hintCena">
+                  {{ 'VOZIDLO.CENA.LABEL' | translate }}
+                  <i *ngIf="('VOZIDLO.CENA.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+              </label>
+              <div class="{{ layout.grid.input }}">
+                  <div class="input-group">
+                      <input name="cena" class="form-control" type="text" placeholder="{{ 'VOZIDLO.CENA.PLACEHOLDER' | translate }}"
+                          [(ngModel)]="data.vozidlo.cena" #Cena="ngModel" telefonFormat />
+                      <div class="input-group-append">
+                          <span class="input-group-text">{{ 'FORM.KC' | translate }}</span>
+                      </div>
+                  </div>					
+              </div>
+          </div> 
+
+        </div>        
+      </div>
+
+  </div>
+
+  </fieldset>
+

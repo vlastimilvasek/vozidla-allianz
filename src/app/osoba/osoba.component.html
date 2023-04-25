@@ -1,0 +1,222 @@
+<fieldset [ngModelGroup]="'osoba-' + role">
+<div class="row">
+	<div class="{{ layout.grid.column }}">
+
+		<ng-template #hintOsoba><div class="text-left" [innerHtml]="'OSOBA.SUBJEKT.HINT' | translate"></div></ng-template>
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+                placement="right auto"
+                triggers="mouseenter:mouseleave"		
+                [tooltip]="('OSOBA.SUBJEKT.HINT' | translate) === '' ? '' : hintOsoba">
+				{{ 'OSOBA.SUBJEKT.LABEL' | translate }}
+				<i *ngIf="('OSOBA.SUBJEKT.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>		
+			<div class="{{ layout.grid.input }}"> 
+				<ngx-select
+					name = "typ" class="" #typ="ngModel"
+					placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+				    [items]="lists.osoba"
+				    [allowClear]="false"
+				    [(ngModel)]="data.typ" 
+				    required>
+				</ngx-select>			
+			</div>
+			<small [hidden]="typ.valid || (typ.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>		
+		</div>
+		<ng-template #hintIC><div class="text-left" [innerHtml]="'OSOBA.IC.HINT' | translate"></div></ng-template>
+		<div class="form-group row" *ngIf="data.typ > 2">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.IC.HINT' | translate) === '' ? '' : hintIC">
+				{{ 'OSOBA.IC.LABEL' | translate }}
+				<i *ngIf="('OSOBA.IC.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+					<input name="ic" class="form-control" type="text"
+						placeholder="{{ 'OSOBA.IC.PLACEHOLDER' | translate }}"
+						[(ngModel)]="data.ic" #ic="ngModel" IC required />					
+			</div>
+			<small [hidden]="ic.valid || (ic.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'OSOBA.IC.REQUIRED' | translate }}
+			</small>
+			<ng-template #hintPlatceDPH><div class="text-left" [innerHtml]="'OSOBA.PLATCE_DPH.HINT' | translate"></div></ng-template>
+			<div class="{{ layout.grid.input }} {{ layout.grid.offset }} mt-3">			
+				<div class="custom-control custom-checkbox col">
+					<input class="custom-control-input" id="{{ role }}.platce_dph" name="{{ role }}.platce_dph" [(ngModel)]="data.platce_dph" type="checkbox" />
+					<label class="custom-control-label" for="{{ role }}.platce_dph"
+						placement="right auto"
+						triggers="mouseenter:mouseleave"		
+						[tooltip]="('OSOBA.PLATCE_DPH.HINT' | translate) === '' ? '' : hintPlatceDPH">
+						{{ 'OSOBA.PLATCE_DPH.LABEL' | translate }}
+						<i *ngIf="('OSOBA.PLATCE_DPH.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+					</label>
+				</div>
+			</div>		
+		</div>
+		<ng-template #hintTitul><div class="text-left" [innerHtml]="'OSOBA.TITUL.HINT' | translate"></div></ng-template>		
+		<div class="form-group row" *ngIf="data.typ < 4">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.TITUL.HINT' | translate) === '' ? '' : hintTitul">
+				{{ 'OSOBA.TITUL.LABEL' | translate }}
+				<i *ngIf="('OSOBA.TITUL.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="col-sm-3 col-xs-5">
+				<input name="titul" class="form-control" type="text" placeholder="{{ 'OSOBA.TITUL.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.titul" #titul="ngModel" />
+			</div>
+			<div class="col-sm-1 col-xs-1">/</div>
+			<div class="col-sm-3 col-xs-5">
+				<input name="titul_za" class="form-control" type="text" placeholder="{{ 'OSOBA.TITUL_ZA.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.titul_za" #titul_za="ngModel" />
+			</div>			
+			<small [hidden]="titul.valid || (titul.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>
+		<ng-template #hintSpolecnost><div class="text-left" [innerHtml]="'OSOBA.SPOLECNOST.HINT' | translate"></div></ng-template>
+		<div class="form-group row" *ngIf="data.typ === 4">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.SPOLECNOST.HINT' | translate) === '' ? '' : hintSpolecnost">
+				{{ 'OSOBA.SPOLECNOST.LABEL' | translate }}
+				<i *ngIf="('OSOBA.SPOLECNOST.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="spolecnost" class="form-control" type="text" placeholder="{{ 'OSOBA.SPOLECNOST.PLACEHOLDER' | translate }}" 
+					[(ngModel)]="data.spolecnost" #spolecnost="ngModel" required />
+			</div>
+			<small [hidden]="spolecnost.valid || (spolecnost.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>			
+		</div>
+		<ng-template #hintJmeno><div class="text-left" [innerHtml]="'OSOBA.JMENO.HINT' | translate"></div></ng-template>
+		<div class="form-group row" *ngIf="data.typ < 4 || role === 'pojistnik'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.JMENO.HINT' | translate) === '' ? '' : hintJmeno">
+				{{ 'OSOBA.JMENO.LABEL' | translate }}
+				<i *ngIf="('OSOBA.JMENO.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="jmeno" class="form-control" type="text" placeholder="{{ 'OSOBA.JMENO.PLACEHOLDER' | translate }}" 
+					[(ngModel)]="data.jmeno" #jmeno="ngModel" required />
+			</div>
+			<small [hidden]="jmeno.valid || (jmeno.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>			
+		</div>
+		<ng-template #hintPrijmeni><div class="text-left" [innerHtml]="'OSOBA.PRIJMENI.HINT' | translate"></div></ng-template>
+		<div class="form-group row" *ngIf="data.typ < 4 || role === 'pojistnik'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.PRIJMENI.HINT' | translate) === '' ? '' : hintPrijmeni">
+				{{ 'OSOBA.PRIJMENI.LABEL' | translate }}
+				<i *ngIf="('OSOBA.PRIJMENI.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="prijmeni" class="form-control" type="text" placeholder="{{ 'OSOBA.PRIJMENI.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.prijmeni" #prijmeni="ngModel" required />
+			</div>
+			<small [hidden]="prijmeni.valid || (prijmeni.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>
+		<ng-template #hintRC><div class="text-left" [innerHtml]="'OSOBA.RC.HINT' | translate"></div></ng-template>	
+		<div class="form-group row" *ngIf="data.typ < 4">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.RC.HINT' | translate) === '' ? '' : hintRC">
+				{{ 'OSOBA.RC.LABEL' | translate }}
+				<i *ngIf="('OSOBA.RC.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="rc" class="form-control" type="text" placeholder="{{ 'OSOBA.RC.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.rc" #rc="ngModel" RC required />
+			</div>
+			<small [hidden]="rc.valid || (rc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'OSOBA.RC.REQUIRED' | translate }}
+			</small>
+		</div>
+		<ng-template #hintEmail><div class="text-left" [innerHtml]="'OSOBA.EMAIL.HINT' | translate"></div></ng-template>
+		<div *ngIf="role === 'pojistnik'" class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.EMAIL.HINT' | translate) === '' ? '' : hintEmail">
+				{{ 'OSOBA.EMAIL.LABEL' | translate }}
+				<i *ngIf="('OSOBA.EMAIL.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="email" class="form-control" type="email" placeholder="{{ 'OSOBA.EMAIL.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.email" #email="ngModel" email required />
+			</div>
+			<small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>
+		<ng-template #hintTelefon><div class="text-left" [innerHtml]="'OSOBA.TELEFON.HINT' | translate"></div></ng-template>
+		<div *ngIf="role === 'pojistnik'" class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right auto"
+				triggers="mouseenter:mouseleave"		
+				[tooltip]="('OSOBA.TELEFON.HINT' | translate) === '' ? '' : hintTelefon">
+				{{ 'OSOBA.TELEFON.LABEL' | translate }}
+				<i *ngIf="('OSOBA.TELEFON.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="telefon" class="form-control" type="text" placeholder="{{ 'OSOBA.TELEFON.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.telefon" #telefon="ngModel" telefonFormat pattern="[0-9]{9}" required />
+			</div>
+			<small [hidden]="telefon.valid || (telefon.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>		
+
+	</div>
+	<div class="{{ layout.grid.column }}">
+   		<app-adresa [prefix]="role" [(data)]="data.adresa" [layout]="layout" [submitted]="submitted"></app-adresa>
+
+		<div *ngIf="role === 'pojistnik'">
+			<ng-template #hintKAdresa><div class="text-left" [innerHtml]="'OSOBA.KADRESA.HINT' | translate"></div></ng-template>
+			<div class="form-group row">
+				<label class="{{ layout.grid.label2 }} col-form-label"
+					placement="right auto"
+					triggers="mouseenter:mouseleave"		
+					[tooltip]="('OSOBA.KADRESA.HINT' | translate) === '' ? '' : hintKAdresa">
+					{{ 'OSOBA.KADRESA.LABEL' | translate }}
+					<i *ngIf="('OSOBA.KADRESA.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+				</label>
+				<div class="{{ layout.grid.input2 }} pt-1">   		
+					<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+					<label class="btn btn-outline-primary" [class.active]="data.kadresa === true">
+						<input name="kadresa" [(ngModel)]="data.kadresa" [value]="true" type="radio" required />
+						{{ 'FORM.ANO' | translate }}
+					</label>
+					<label class="btn btn-outline-primary" [class.active]="data.kadresa === false">
+						<input name="kadresa" [(ngModel)]="data.kadresa" [value]="false" type="radio" />
+						{{ 'FORM.NE' | translate }}
+					</label>
+					</div>
+				</div>   		
+			</div>
+			
+			<app-adresa [prefix]="role + 'korespond'" [(data)]="data.kor_adresa" [layout]="layout" [submitted]="submitted" *ngIf="data.kadresa === true" ></app-adresa>
+		</div>
+	</div>
+</div>
+</fieldset>
+<!--
+<div class="alert alert-info" role="alert">
+	<h3>Lokální data - pojistnik</h3>
+	<pre>{{ data | json }}</pre>
+</div>
+-->

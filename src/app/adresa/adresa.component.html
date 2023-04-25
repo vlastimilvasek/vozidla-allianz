@@ -1,0 +1,153 @@
+<fieldset [ngModelGroup]="prefix + '-adresa'">
+
+	<ng-template #hintUlice><div class="text-left" [innerHtml]="'ADRESA.ULICE.HINT' | translate"></div></ng-template>
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right auto"
+			triggers="mouseenter:mouseleave"		
+			[tooltip]="('ADRESA.ULICE.HINT' | translate) === '' ? '' : hintUlice">
+			{{ 'ADRESA.ULICE.LABEL' | translate }}
+			<i *ngIf="('ADRESA.ULICE.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="ulice" class="form-control" type="text" placeholder="{{ 'ADRESA.ULICE.PLACEHOLDER' | translate }}"
+				[typeahead]="lists.ulice"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				typeaheadOptionField="nazev_ulice"
+				[readonly]="uzamcena"
+				[(ngModel)]="data.ulice" #ulice="ngModel" autocomplete="off" required />
+		</div>
+		<small [hidden]="ulice.valid || (ulice.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+
+	<ng-template #hintCP><div class="text-left" [innerHtml]="'ADRESA.CP.HINT' | translate"></div></ng-template>
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right auto"
+			triggers="mouseenter:mouseleave"		
+			[tooltip]="('ADRESA.CP.HINT' | translate) === '' ? '' : hintCP">
+			{{ 'ADRESA.CP.LABEL' | translate }}
+			<i *ngIf="('ADRESA.CP.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="cp" class="form-control" type="text" placeholder="{{ 'ADRESA.CP.PLACEHOLDER' | translate }}"
+				[typeahead]="lists.cp"
+				[typeaheadOptionsLimit]="7"
+				typeaheadOptionField="cp"
+				(typeaheadOnSelect)="CPOnSelect($event)"
+				[readonly]="uzamcena"
+				[(ngModel)]="data.cp" #cp="ngModel" autocomplete="off" required />
+		</div>
+		<small [hidden]="cp.valid || (cp.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>	
+
+	<ng-template #hintObec><div class="text-left" [innerHtml]="'ADRESA.OBEC.HINT' | translate"></div></ng-template>
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right auto"
+			triggers="mouseenter:mouseleave"		
+			[tooltip]="('ADRESA.OBEC.HINT' | translate) === '' ? '' : hintObec">
+			{{ 'ADRESA.OBEC.LABEL' | translate }}
+			<i *ngIf="('ADRESA.OBEC.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="obec" class="form-control" type="text"
+				[typeahead]="lists.obec"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				(typeaheadOnSelect)="ObecOnSelect($event)"
+				(blur)="ObecChange($event.target.value)"
+				typeaheadOptionField="nazev"
+				autocomplete="off" 	
+				[readonly]="uzamcena"		
+				placeholder="{{ 'ADRESA.OBEC.PLACEHOLDER' | translate }}"
+				[(ngModel)]="data.obec" #obec="ngModel" required />
+		</div>
+		<small [hidden]="obec.valid || (obec.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+	
+	<ng-template #hintPSC><div class="text-left" [innerHtml]="'ADRESA.PSC.HINT' | translate"></div></ng-template>
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }} col-form-label"
+			placement="right auto"
+			triggers="mouseenter:mouseleave"		
+			[tooltip]="('ADRESA.PSC.HINT' | translate) === '' ? '' : hintPSC">
+			{{ 'ADRESA.PSC.LABEL' | translate }}
+			<i *ngIf="('ADRESA.PSC.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="psc" class="form-control" type="text"
+				[typeahead]="lists.psc"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				typeaheadOptionField="psc"	
+				placeholder="{{ 'ADRESA.PSC.PLACEHOLDER' | translate }}"
+				autocomplete="off" 
+				[readonly]="uzamcena"
+				[(ngModel)]="data.psc" #psc="ngModel" required />
+		</div>
+		<small [hidden]="psc.valid || (psc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+
+	<ng-template #hintOvereno><div class="text-left" [innerHtml]="'ADRESA.OVERENO.HINT' | translate"></div></ng-template>
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }} col-form-label"
+			placement="right auto"
+			triggers="mouseenter:mouseleave"		
+			[tooltip]="('ADRESA.OVERENO.HINT' | translate) === '' ? '' : hintOvereno">
+			{{ 'ADRESA.OVERENO.LABEL' | translate }}
+			<i *ngIf="('ADRESA.OVERENO.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+		</label>
+		<div class="{{ layout.grid.input }}" style="padding-top: 6px">
+			<span *ngIf="data.adr_id" [innerHtml]="'ADRESA.OVERENO.ANO' | translate" ></span>
+			<span *ngIf="!data.adr_id" [innerHtml]="'ADRESA.OVERENO.NE' | translate" ></span>
+			<span *ngIf="!data.adr_id && data.psc && data.obec && data.ulice && data.cp">
+				&nbsp;<button type="button" class="btn btn-sm btn-secondary" (click)="OverAdresu()">{{ 'ADRESA.OVERENO.OVERIT' | translate }}</button>
+			</span>
+			<span *ngIf="uzamcena">
+				&nbsp;<button type="button" class="btn btn-sm btn-secondary" (click)="ZmenAdresu()">{{ 'ADRESA.OVERENO.ZMENIT' | translate }}</button>
+			</span>			
+		</div>
+	</div>	
+
+
+</fieldset>
+
+
+
+<div class="modal fade" bsModal #modAdresa="bs-modal" tabindex="-1" role="dialog" aria-labelledby="dialog-vyber-adresy">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-events-name" class="modal-title pull-left">{{ 'ADRESA.MODAL.TITLE' | translate }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modAdresa.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<h5 class="text-primary" *ngIf="adresy.length">{{ 'ADRESA.MODAL.VYBER' | translate }}</h5>  
+		<div *ngIf="adresy.length" class="list-group">
+			<button *ngFor="let a of adresy" (click)="VyberAdresu(a)" type="button" class="list-group-item list-group-item-action">{{ a.cp }}</button>
+		</div>
+        <div class="pt-3 text-left" [innerHtml]="'ADRESA.MODAL.UPRESNIT' | translate"></div>
+		<div class="pb-3 text-center">
+			<a href="https://mapy.cz/turisticka?q={{ data.ulice }} {{ data.cp }}, {{ data.psc }} {{ data.obec }}" 
+				class="text-center btn btn-primary" role="button" target="adresa_mapycz">
+				Adresa na mapy.cz</a>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
